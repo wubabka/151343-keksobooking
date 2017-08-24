@@ -22,6 +22,14 @@ var TYPE_NAMES = {
   'bungalo': 'Бунгало'
 };
 
+var ESCAPE_KEY_CODE = 27;
+var ENTER_KEY_CODE = 13;
+
+var pinsMap = document.querySelector('.tokyo__pin-map');
+var pinActive = document.querySelector('.pin--active');
+var dialogWindow = document.querySelector('.dialog');
+var dialogClose = dialogWindow.querySelector('.dialog__close');
+
 // -----> Возврат рандомного значения <-----
 var getRandomInt = function (min, max) {
   return min + Math.floor(Math.random() * (max + 1 - min));
@@ -89,11 +97,15 @@ var createAdverts = function (count) {
 };
 
 // -----> Создание пина <-----
-var createPin = function (item) {
+var createPin = function (item, state) {
   var pin = document.createElement('div');
   var img = document.createElement('img');
-
-  pin.className = 'pin';
+  if (state === 0) {
+    pin.className = 'pin pin--active';
+    pinActive = pin;
+  } else {
+    pin.className = 'pin';
+  }
   pin.style.left = item.location.x - pin.offsetWidth / 2 + 'px';
   pin.style.top = item.location.y - pin.offsetHeight + 'px';
   img.className = 'rounded';
@@ -101,6 +113,7 @@ var createPin = function (item) {
   img.height = 40;
   img.src = item.author.avatar;
   pin.appendChild(img);
+  pin.setAttribute('tabindex', 0);
 
   return pin;
 };
@@ -135,6 +148,7 @@ var createDialog = function (advertItem) {
   document.querySelector('.dialog__title img').src = advertItem.author.avatar;
 
   dialog.replaceChild(lodgeItem, dialogPanel);
+  document.addEventListener('keydown', onCloseDialogEsc);
 };
 
 // -----> Добавление пинов в DOM <-----
@@ -150,3 +164,81 @@ var renderPins = function (pin) {
 var advertsList = createAdverts(NEIGHBORS);
 renderPins(advertsList);
 createDialog(advertsList[0]);
+
+// -----> Нажатие на Esc <-----
+var isEscapePressed = function (evt) {
+  return evt.keyCode === ESCAPE_KEY_CODE;
+};
+
+// -----> Нажатие на Enter <-----
+var isEnterPressed = function (evt) {
+  return evt.keyCode === ENTER_KEY_CODE;
+};
+
+// -----> Клик мышкой <-----
+var isClicked = function (evt) {
+  return evt.type === 'click';
+};
+
+// -----> Закрытие окна с объявлением по клику или Enter <-----
+var onCloseDialog = function (evt) {
+  if (isEnterPressed(evt) || isClicked(evt)) {
+    if (pinActive) {
+      pinActive.classList.remove('pin--active');
+    }
+    dialogWindow.style.display = 'none';
+    document.removeEventListener('keydown', onCloseDialogEsc);
+  }
+};
+
+// -----> Закрытие окна с объявлением по Esc <-----
+var onCloseDialogEsc = function (evt) {
+  if (isEscapePressed(evt)) {
+    if (pinActive) {
+      pinActive.classList.remove('pin--active');
+      pinActive = '';
+    }
+    dialogWindow.style.display = 'none';
+  }
+};
+
+// -----> Поиск номера объявления по данным аватара <-----
+var searchAdvert = function (current) {
+  for (var i = 0; i < advertsList.length; i++) {
+    if (advertsList[i].author.avatar === current) {
+      break;
+    }
+  }
+  return i;
+};
+
+// -----> Показать объявление, если на пин кликнули или нажали Enter <-----
+var onShowDialog = function (evt) {
+  if (isEnterPressed(evt) || isClicked(evt)) {
+    var currentPin = '';
+    var currentSrc = '';
+    var currentTarget = evt.target;
+    if (evt.target.className === 'rounded') {
+      currentPin = currentTarget.offsetParent;
+      currentSrc = currentTarget.getAttribute('src');
+    } else if (currentTarget.className === 'pin') {
+      currentPin = currentTarget;
+      currentSrc = currentTarget.children[0].getAttribute('src');
+    }
+    // -----> Если у пина уже есть pin--active, то его надо убрать <-----
+    if (pinActive) {
+      pinActive.classList.remove('pin--active');
+    }
+    currentPin.classList.add('pin--active');
+    pinActive = currentPin;
+    // -----> Создание окна диалога для выбранного пина <-----
+    var pinNumber = searchAdvert(currentSrc);
+    createDialog(advertsList[pinNumber]);
+    dialogWindow.style.display = 'block';
+  }
+};
+
+pinsMap.addEventListener('click', onShowDialog);
+dialogClose.addEventListener('click', onCloseDialog);
+pinsMap.addEventListener('keydown', onShowDialog);
+dialogClose.addEventListener('keydown', onCloseDialog);
