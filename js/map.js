@@ -242,3 +242,80 @@ pinsMap.addEventListener('click', onShowDialog);
 dialogClose.addEventListener('click', onCloseDialog);
 pinsMap.addEventListener('keydown', onShowDialog);
 dialogClose.addEventListener('keydown', onCloseDialog);
+
+var submit = document.querySelector('.form__submit');
+var type = document.querySelector('#type');
+var timeCheckIn = document.querySelector('#timein');
+var timeCheckOut = document.querySelector('#timeout');
+var roomNumber = document.querySelector('#room_number');
+
+// -----> Время выезда === время заезда <-----
+var onTimeChange = function (evt) {
+  if (evt.srcElement.id === 'timein') {
+    timeCheckOut.value = timeCheckIn.value;
+  } else if (evt.srcElement.id === 'timeout') {
+    timeCheckIn.value = timeCheckOut.value;
+  }
+};
+
+// -----> Минимальная цена в соответствии с типом жилья <-----
+var onTypeChange = function (event) {
+  var price = document.querySelector('#price');
+  var minPrices = {
+    'Квартира': 1000,
+    'Лачуга': 0,
+    'Дом': 5000,
+    'Дворец': 10000
+  };
+  price.value = minPrices[event.target.value];
+  price.min = minPrices[event.target.value];
+};
+
+// -----> Количество гостей в соответствии с кол-вом комнат <-----
+var onRoomsChange = function () {
+  var roomsNumber = document.querySelector('#room_number');
+  var guestsNumber = document.querySelector('#capacity');
+
+  if (roomsNumber.value === '1') {
+    guestsNumber.value = '0';
+  } else {
+    guestsNumber.value = '3';
+  }
+};
+
+// -----> Запуск проверки заполнения формы <-----
+function onSubmitClick() {
+  if (!isFormValidate()) {
+    event.preventDefault();
+  }
+}
+
+// -----> Цвет рамки в зависимости от валидности <-----
+function borderPaint(element, condition) {
+  element.style.borderColor = !condition ? 'green' : 'red';
+}
+
+// -----> Обработчик события нажатия кнопки "Опубликовать" <-----
+function isFormValidate() {
+  var title = document.querySelector('#title');
+  var price = document.querySelector('#price');
+
+  var invalid = {
+    titleRules: !title.hasAttribute('required') ||
+      (title.value.length < 30 || title.value.length > 100),
+    priceRules: !price.type === 'number' ||
+      !price.hasAttribute('required') ||
+      (price.value < 1000 || price.value > 1000000)
+  };
+
+  borderPaint(title, invalid.titleRules);
+  borderPaint(price, invalid.priceRules);
+
+  return invalid.titleRules || invalid.priceRules;
+}
+
+submit.addEventListener('click', onSubmitClick);
+type.addEventListener('change', onTypeChange);
+timeCheckIn.addEventListener('change', onTimeChange);
+timeCheckOut.addEventListener('change', onTimeChange);
+roomNumber.addEventListener('change', onRoomsChange);
