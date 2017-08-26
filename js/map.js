@@ -245,18 +245,27 @@ dialogClose.addEventListener('keydown', onCloseDialog);
 
 var submit = document.querySelector('.form__submit');
 var type = document.querySelector('#type');
-var timeCheckIn = document.querySelector('#timein');
-var timeCheckOut = document.querySelector('#timeout');
+// var timeCheckIn = document.querySelector('#timein');
+// var timeCheckOut = document.querySelector('#timeout');
 var roomNumber = document.querySelector('#room_number');
 
 // -----> Время выезда === время заезда <-----
-var onTimeChange = function (evt) {
-  if (evt.srcElement.id === 'timein') {
-    timeCheckOut.value = timeCheckIn.value;
-  } else if (evt.srcElement.id === 'timeout') {
-    timeCheckIn.value = timeCheckOut.value;
-  }
-};
+// var onTimeChange = function (evt) {
+//   if (evt.srcElement.id === 'timein') {
+//     timeCheckOut.value = timeCheckIn.value;
+//   } else if (evt.srcElement.id === 'timeout') {
+//     timeCheckIn.value = timeCheckOut.value;
+//   }
+// };
+
+var timein = document.querySelector('#timein');
+
+timein.addEventListener('change', timeChangeHandler);
+
+function timeChangeHandler(event) {
+  var timeout = document.querySelector('#timeout');
+  timeout.selectedIndex = event.target.selectedIndex;
+}
 
 // -----> Минимальная цена в соответствии с типом жилья <-----
 var onTypeChange = function (event) {
@@ -316,6 +325,6 @@ function isFormValidate() {
 
 submit.addEventListener('click', onSubmitClick);
 type.addEventListener('change', onTypeChange);
-timeCheckIn.addEventListener('change', onTimeChange);
-timeCheckOut.addEventListener('change', onTimeChange);
+// timeCheckIn.addEventListener('change', onTimeChange);
+// timeCheckOut.addEventListener('change', onTimeChange);
 roomNumber.addEventListener('change', onRoomsChange);
