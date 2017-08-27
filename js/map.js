@@ -15,11 +15,18 @@ var TITLES = [
   'Неуютное бунгало по колено в воде'
 ];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var TYPES = ['flat', 'house', 'bungalo'];
+var TYPES = ['flat', 'home', 'house', 'bungalo'];
 var TYPE_NAMES = {
   'flat': 'Квартира',
-  'house': 'Дом',
+  'home': 'Дом',
+  'house': 'Дворец',
   'bungalo': 'Бунгало'
+};
+var TYPE_COSTS = {
+  flat: 1000,
+  home: 5000,
+  house: 10000,
+  bungalo: 0
 };
 
 var ESCAPE_KEY_CODE = 27;
@@ -244,53 +251,94 @@ pinsMap.addEventListener('keydown', onShowDialog);
 dialogClose.addEventListener('keydown', onCloseDialog);
 
 var submit = document.querySelector('.form__submit');
-var type = document.querySelector('#type');
-// var timeCheckIn = document.querySelector('#timein');
-// var timeCheckOut = document.querySelector('#timeout');
-var roomNumber = document.querySelector('#room_number');
-
-// -----> Время выезда === время заезда <-----
-// var onTimeChange = function (evt) {
-//   if (evt.srcElement.id === 'timein') {
-//     timeCheckOut.value = timeCheckIn.value;
-//   } else if (evt.srcElement.id === 'timeout') {
-//     timeCheckIn.value = timeCheckOut.value;
-//   }
-// };
-
-var timein = document.querySelector('#timein');
-
-timein.addEventListener('change', timeChangeHandler);
-
-function timeChangeHandler(event) {
-  var timeout = document.querySelector('#timeout');
-  timeout.selectedIndex = event.target.selectedIndex;
-}
+var selectBuildingType = document.querySelector('#type');
+var inputOfferPrice = document.querySelector('#price');
 
 // -----> Минимальная цена в соответствии с типом жилья <-----
-var onTypeChange = function (event) {
-  var price = document.querySelector('#price');
-  var minPrices = {
-    'Квартира': 1000,
-    'Лачуга': 0,
-    'Дом': 5000,
-    'Дворец': 10000
-  };
-  price.value = minPrices[event.target.value];
-  price.min = minPrices[event.target.value];
-};
-
-// -----> Количество гостей в соответствии с кол-вом комнат <-----
-var onRoomsChange = function () {
-  var roomsNumber = document.querySelector('#room_number');
-  var guestsNumber = document.querySelector('#capacity');
-
-  if (roomsNumber.value === '1') {
-    guestsNumber.value = '0';
-  } else {
-    guestsNumber.value = '3';
+var onInputOfferPrice = function () {
+  var buildingType = 'flat';
+  if (inputOfferPrice.value < TYPE_COSTS['flat']) {
+    buildingType = 'bungalo';
+  } else if (inputOfferPrice.value >= TYPE_COSTS['house']) {
+    buildingType = 'house';
+  } else if (inputOfferPrice.value >= TYPE_COSTS['home']) {
+    buildingType = 'home';
+  }
+  if (selectBuildingType.value !== buildingType) {
+    selectBuildingType.value = buildingType;
+    inputOfferPrice.setAttribute('min', TYPE_COSTS[buildingType]);
   }
 };
+
+var onSelectBuilding = function () {
+  var minPrice = TYPE_COSTS[selectBuildingType.children[selectBuildingType.selectedIndex].value];
+  inputOfferPrice.setAttribute('min', minPrice);
+  inputOfferPrice.value = minPrice;
+};
+
+selectBuildingType.addEventListener('change', onSelectBuilding);
+inputOfferPrice.addEventListener('input', onInputOfferPrice);
+
+// -----> Количество людей и комнат в зависимости от типа <-----
+var selectCapacity = document.querySelector('#capacity');
+var selectRoomNum = document.querySelector('#room_number');
+
+var onSelectCapacity = function (e) {
+  var roomNumberValue;
+  switch (e.currentTarget.children[e.currentTarget.selectedIndex].value) {
+    case '0':
+      roomNumberValue = 100;
+      break;
+    case '1':
+      roomNumberValue = 1;
+      break;
+    case '2':
+      roomNumberValue = 2;
+      break;
+    case '3':
+      roomNumberValue = 3;
+      break;
+    default:
+      roomNumberValue = 1;
+  }
+  selectRoomNum.value = roomNumberValue;
+};
+
+var onSelectRoomNum = function (e) {
+  var capacityValue;
+  switch (e.currentTarget.children[e.currentTarget.selectedIndex].value) {
+    case '1':
+      capacityValue = 1;
+      break;
+    case '2':
+      capacityValue = 2;
+      break;
+    case '3':
+      capacityValue = 3;
+      break;
+    case '100':
+      capacityValue = 0;
+      break;
+    default:
+      capacityValue = 1;
+  }
+  selectCapacity.value = capacityValue;
+};
+
+selectRoomNum.addEventListener('change', onSelectRoomNum);
+selectCapacity.addEventListener('change', onSelectCapacity);
+
+// -----> Время выезда === время заезда <-----
+var selectTimeIn = document.querySelector('#timein');
+var selectTimeOut = document.querySelector('#timeout');
+
+var onSelectSameTime = function (e) {
+  var itemToChange = (e.currentTarget === selectTimeIn) ? selectTimeOut : selectTimeIn;
+  itemToChange.children[e.currentTarget.selectedIndex].selected = true;
+};
+
+selectTimeIn.addEventListener('change', onSelectSameTime);
+selectTimeOut.addEventListener('change', onSelectSameTime);
 
 // -----> Запуск проверки заполнения формы <-----
 function onSubmitClick() {
@@ -324,7 +372,7 @@ function isFormValidate() {
 }
 
 submit.addEventListener('click', onSubmitClick);
-type.addEventListener('change', onTypeChange);
+// type.addEventListener('change', onTypeChange);
 // timeCheckIn.addEventListener('change', onTimeChange);
 // timeCheckOut.addEventListener('change', onTimeChange);
-roomNumber.addEventListener('change', onRoomsChange);
+// roomNumber.addEventListener('change', onRoomsChange);
