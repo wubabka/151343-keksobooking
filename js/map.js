@@ -304,35 +304,40 @@ selectCapacity.addEventListener('change', onSelectCapacity);
 var selectTimeIn = document.querySelector('#timein');
 var selectTimeOut = document.querySelector('#timeout');
 
-var onSelectSameTime = function (e) {
-  var itemToChange = (e.currentTarget === selectTimeIn) ? selectTimeOut : selectTimeIn;
-  itemToChange.children[e.currentTarget.selectedIndex].selected = true;
+var syncOnChange = function (element1, element2) {
+  var selected = element1.value;
+  element2.value = selected;
 };
 
-selectTimeIn.addEventListener('change', onSelectSameTime);
-selectTimeOut.addEventListener('change', onSelectSameTime);
+selectTimeIn.addEventListener('change', function () {
+  syncOnChange(selectTimeIn, selectTimeOut);
+});
+selectTimeOut.addEventListener('change', function () {
+  syncOnChange(selectTimeOut, selectTimeIn);
+});
 
-// -----> Запуск проверки заполнения формы <-----
-function onSubmitClick() {
-  if (!isFormValidate()) {
-    event.preventDefault();
-  }
-}
 
 // -----> Цвет рамки в зависимости от валидности <-----
-function borderPaint(element, condition) {
+var borderPaint = function borderPaint(element, condition) {
   element.style.borderColor = !condition ? 'green' : 'red';
-}
+};
+
+// -----> Запуск проверки заполнения формы <-----
+var onSubmitClick = function (e) {
+  if (!isFormValidate()) {
+    e.preventDefault();
+  }
+};
 
 // -----> Обработчик события нажатия кнопки "Опубликовать" <-----
-function isFormValidate() {
+var isFormValidate = function () {
   var title = document.querySelector('#title');
   var price = document.querySelector('#price');
 
   var invalid = {
     titleRules: !title.hasAttribute('required') ||
       (title.value.length < 30 || title.value.length > 100),
-    priceRules: !price.type === 'number' ||
+    priceRules:
       !price.hasAttribute('required') ||
       (price.value < 1000 || price.value > 1000000)
   };
@@ -341,10 +346,6 @@ function isFormValidate() {
   borderPaint(price, invalid.priceRules);
 
   return invalid.titleRules || invalid.priceRules;
-}
+};
 
 submit.addEventListener('click', onSubmitClick);
-// type.addEventListener('change', onTypeChange);
-// timeCheckIn.addEventListener('change', onTimeChange);
-// timeCheckOut.addEventListener('change', onTimeChange);
-// roomNumber.addEventListener('change', onRoomsChange);
