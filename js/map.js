@@ -284,45 +284,17 @@ var selectCapacity = document.querySelector('#capacity');
 var selectRoomNum = document.querySelector('#room_number');
 
 var onSelectCapacity = function (e) {
-  var roomNumberValue;
-  switch (e.currentTarget.children[e.currentTarget.selectedIndex].value) {
-    case '0':
-      roomNumberValue = 100;
-      break;
-    case '1':
-      roomNumberValue = 1;
-      break;
-    case '2':
-      roomNumberValue = 2;
-      break;
-    case '3':
-      roomNumberValue = 3;
-      break;
-    default:
-      roomNumberValue = 1;
+  var currentTargetCapacity = e.currentTarget.children[e.currentTarget.selectedIndex].value;
+  if (selectRoomNum.value < currentTargetCapacity) {
+    selectRoomNum.value = currentTargetCapacity;
+  } else if (currentTargetCapacity === '0') {
+    selectRoomNum.value = currentTargetCapacity;
   }
-  selectRoomNum.value = roomNumberValue;
 };
 
 var onSelectRoomNum = function (e) {
-  var capacityValue;
-  switch (e.currentTarget.children[e.currentTarget.selectedIndex].value) {
-    case '1':
-      capacityValue = 1;
-      break;
-    case '2':
-      capacityValue = 2;
-      break;
-    case '3':
-      capacityValue = 3;
-      break;
-    case '100':
-      capacityValue = 0;
-      break;
-    default:
-      capacityValue = 1;
-  }
-  selectCapacity.value = capacityValue;
+  var currentTargetRoomNum = e.currentTarget.children[e.currentTarget.selectedIndex].value;
+  selectCapacity.value = currentTargetRoomNum;
 };
 
 selectRoomNum.addEventListener('change', onSelectRoomNum);
