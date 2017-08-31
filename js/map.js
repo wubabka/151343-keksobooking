@@ -279,26 +279,17 @@ var onSelectBuilding = function () {
 selectBuildingType.addEventListener('change', onSelectBuilding);
 inputOfferPrice.addEventListener('input', onInputOfferPrice);
 
-// -----> Количество людей и комнат в зависимости от типа <-----
-var selectCapacity = document.querySelector('#capacity');
-var selectRoomNum = document.querySelector('#room_number');
-
-var onSelectCapacity = function (e) {
-  var currentTargetCapacity = e.currentTarget.children[e.currentTarget.selectedIndex].value;
-  if (selectRoomNum.value < currentTargetCapacity) {
-    selectRoomNum.value = currentTargetCapacity;
-  } else if (currentTargetCapacity === '0') {
-    selectRoomNum.value = currentTargetCapacity;
-  }
-};
-
-var onSelectRoomNum = function (e) {
-  var currentTargetRoomNum = e.currentTarget.children[e.currentTarget.selectedIndex].value;
-  selectCapacity.value = currentTargetRoomNum;
-};
-
-selectRoomNum.addEventListener('change', onSelectRoomNum);
-selectCapacity.addEventListener('change', onSelectCapacity);
+(function (capacity, roomNumber) {
+  var update = function (i) {
+    var value = '';
+    for (i = 1; i <= roomNumber.value; i++) {
+      value = value + '<option value=' + i + '>для ' + i + ' гост' + (i === 1 ? 'я' : 'ей') + '</option>';
+    }
+    capacity.innerHTML = value || '<option>не для гостей</option>';
+  };
+  update();
+  roomNumber.addEventListener('change', update, false);
+})(document.getElementById('capacity'), document.getElementById('room_number'));
 
 // -----> Время выезда === время заезда <-----
 var selectTimeIn = document.querySelector('#timein');
@@ -315,7 +306,6 @@ selectTimeIn.addEventListener('change', function () {
 selectTimeOut.addEventListener('change', function () {
   syncOnChange(selectTimeOut, selectTimeIn);
 });
-
 
 // -----> Цвет рамки в зависимости от валидности <-----
 var borderPaint = function borderPaint(element, condition) {
