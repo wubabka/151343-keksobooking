@@ -3,8 +3,6 @@
 window.dataSet = (function () {
   var NEIGHBORS = 8;
   var USER_ID = ['01', '02', '03', '04', '05', '06', '07', '08'];
-  var CHECK_IN = ['12:00', '13:00', '14:00'];
-  var CHECK_OUT = ['12:00', '13:00', '14:00'];
   var TITLES = [
     'Большая уютная квартира',
     'Маленькая неуютная квартира',
@@ -17,6 +15,9 @@ window.dataSet = (function () {
   ];
   var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var TYPES = ['flat', 'home', 'house', 'bungalo'];
+
+  var CHECK_IN = ['12:00', '13:00', '14:00'];
+  var CHECK_OUT = ['12:00', '13:00', '14:00'];
 
   var ESCAPE_KEY_CODE = 27;
   var ENTER_KEY_CODE = 13;

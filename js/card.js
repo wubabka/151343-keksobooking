@@ -12,27 +12,16 @@ window.cardSet = (function () {
   var dialogClose = dialogWindow.querySelector('.dialog__close');
   var pinActive;
 
-  // -----> Закрытие окна с объявлением по клику или Enter <-----
+  // -----> Закрытие окна с объявлением по клику, Enter или Esc <-----
   var onCloseDialog = function (evt) {
-    if (window.dataSet.isEnterPressed(evt) || window.dataSet.isClicked(evt)) {
+    if (window.dataSet.isEnterPressed(evt) || window.dataSet.isClicked(evt) || window.dataSet.isEscapePressed(evt)) {
       pinActive = document.querySelector('.pin--active');
       if (pinActive) {
         pinActive.classList.remove('pin--active');
       }
       dialogWindow.style.display = 'none';
-      document.removeEventListener('keydown', onCloseDialogEsc);
-    }
-  };
-
-  // -----> Закрытие окна с объявлением по Esc <-----
-  var onCloseDialogEsc = function (evt) {
-    if (window.dataSet.isEscapePressed(evt)) {
-      pinActive = document.querySelector('.pin--active');
-      if (pinActive) {
-        pinActive.classList.remove('pin--active');
-        pinActive = '';
-      }
-      dialogWindow.style.display = 'none';
+      document.removeEventListener('keydown', onCloseDialog);
+      dialogClose.removeEventListener('click', onCloseDialog);
     }
   };
 
@@ -67,7 +56,7 @@ window.cardSet = (function () {
 
     dialog.replaceChild(lodgeItem, dialogPanel);
     dialogWindow.style.display = 'block';
-    document.addEventListener('keydown', onCloseDialogEsc);
+    document.addEventListener('keydown', onCloseDialog);
     dialogClose.addEventListener('click', onCloseDialog);
     dialogClose.addEventListener('keydown', onCloseDialog);
   };

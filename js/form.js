@@ -8,36 +8,48 @@ window.formSet = (function () {
     bungalo: 0
   };
 
+  var CHECK_IN = ['12:00', '13:00', '14:00'];
+  var CHECK_OUT = ['12:00', '13:00', '14:00'];
+
   var submit = document.querySelector('.form__submit');
   var selectBuildingType = document.querySelector('#type');
   var inputOfferPrice = document.querySelector('#price');
+  var selectTimeIn = document.querySelector('#timein');
+  var selectTimeOut = document.querySelector('#timeout');
+  var capacity = document.getElementById('capacity');
+  var roomNumber = document.getElementById('room_number');
 
   // -----> Минимальная цена в соответствии с типом жилья <-----
-  var onInputOfferPrice = function () {
+  var onInputOfferPrice = function (el1, el2) {
     var buildingType = 'flat';
-    if (inputOfferPrice.value < TYPE_COSTS['flat']) {
+    if (el2.value < TYPE_COSTS['flat']) {
       buildingType = 'bungalo';
-    } else if (inputOfferPrice.value >= TYPE_COSTS['house']) {
+    } else if (el2.value >= TYPE_COSTS['house']) {
       buildingType = 'house';
-    } else if (inputOfferPrice.value >= TYPE_COSTS['home']) {
+    } else if (el2.value >= TYPE_COSTS['home']) {
       buildingType = 'home';
     }
-    if (selectBuildingType.value !== buildingType) {
-      selectBuildingType.value = buildingType;
-      inputOfferPrice.setAttribute('min', TYPE_COSTS[buildingType]);
+    if (el1.value !== buildingType) {
+      el1.value = buildingType;
+      el2.setAttribute('min', TYPE_COSTS[buildingType]);
     }
   };
 
-  var onSelectBuilding = function () {
-    var minPrice = TYPE_COSTS[selectBuildingType.children[selectBuildingType.selectedIndex].value];
-    inputOfferPrice.setAttribute('min', minPrice);
-    inputOfferPrice.value = minPrice;
-  };
+  // var onSelectBuilding = function () {
+  //   var minPrice = TYPE_COSTS[selectBuildingType.children[selectBuildingType.selectedIndex].value];
+  //   inputOfferPrice.value = minPrice;
+  // };
 
-  selectBuildingType.addEventListener('change', onSelectBuilding);
-  inputOfferPrice.addEventListener('input', onInputOfferPrice);
+  // selectBuildingType.addEventListener('change', onSelectBuilding);
+  // inputOfferPrice.addEventListener('input', onInputOfferPrice);
 
-  (function (capacity, roomNumber) {
+  // var onInputOfferPrice = function (element, value) {
+  //   element.value = value;
+  //   element.min = value;
+  // };
+
+  // -----> Количество гостей относительно комнат <-----
+  (function () {
     var update = function (i) {
       var value = '';
       for (i = 1; i <= roomNumber.value; i++) {
@@ -50,20 +62,9 @@ window.formSet = (function () {
   })(document.getElementById('capacity'), document.getElementById('room_number'));
 
   // -----> Время выезда === время заезда <-----
-  var selectTimeIn = document.querySelector('#timein');
-  var selectTimeOut = document.querySelector('#timeout');
-
   var syncOnChange = function (element1, element2) {
-    var selected = element1.value;
-    element2.value = selected;
+    element1.value = element2;
   };
-
-  selectTimeIn.addEventListener('change', function () {
-    syncOnChange(selectTimeIn, selectTimeOut);
-  });
-  selectTimeOut.addEventListener('change', function () {
-    syncOnChange(selectTimeOut, selectTimeIn);
-  });
 
   // -----> Цвет рамки в зависимости от валидности <-----
   var borderPaint = function borderPaint(element, condition) {
@@ -95,6 +96,11 @@ window.formSet = (function () {
 
     return invalid.titleRules || invalid.priceRules;
   };
+
+  window.synchronizeFields(selectBuildingType, inputOfferPrice, onInputOfferPrice, ['flat', 'home', 'house', 'bungalo'], [1000, 5000, 10000, 0]);
+
+  window.synchronizeFields(selectTimeIn, selectTimeOut, syncOnChange, CHECK_IN, CHECK_OUT);
+  window.synchronizeFields(selectTimeOut, selectTimeIn, syncOnChange, CHECK_IN, CHECK_OUT);
 
   submit.addEventListener('click', onSubmitClick);
 
