@@ -1,13 +1,8 @@
 'use strict';
 
 window.formSet = (function () {
-  var TYPE_COSTS = {
-    flat: 1000,
-    home: 5000,
-    house: 10000,
-    bungalo: 0
-  };
-
+  var TYPES = ['flat', 'home', 'house', 'bungalo'];
+  var TYPE_COSTS = [1000, 5000, 10000, 0];
   var CHECK_IN = ['12:00', '13:00', '14:00'];
   var CHECK_OUT = ['12:00', '13:00', '14:00'];
 
@@ -20,46 +15,26 @@ window.formSet = (function () {
   var roomNumber = document.getElementById('room_number');
 
   // -----> Минимальная цена в соответствии с типом жилья <-----
-  var onInputOfferPrice = function (el1, el2) {
-    var buildingType = 'flat';
-    if (el2.value < TYPE_COSTS['flat']) {
-      buildingType = 'bungalo';
-    } else if (el2.value >= TYPE_COSTS['house']) {
-      buildingType = 'house';
-    } else if (el2.value >= TYPE_COSTS['home']) {
-      buildingType = 'home';
-    }
-    if (el1.value !== buildingType) {
-      el1.value = buildingType;
-      el2.setAttribute('min', TYPE_COSTS[buildingType]);
-    }
+  var onInputOfferPrice = function (element, value) {
+    element.value = value;
+    element.placeHolder = value;
+    element.min = value;
   };
 
-  // var onSelectBuilding = function () {
-  //   var minPrice = TYPE_COSTS[selectBuildingType.children[selectBuildingType.selectedIndex].value];
-  //   inputOfferPrice.value = minPrice;
-  // };
-
-  // selectBuildingType.addEventListener('change', onSelectBuilding);
-  // inputOfferPrice.addEventListener('input', onInputOfferPrice);
-
-  // var onInputOfferPrice = function (element, value) {
-  //   element.value = value;
-  //   element.min = value;
-  // };
-
   // -----> Количество гостей относительно комнат <-----
-  (function () {
+  var onRoomNumber = function (price, room) {
     var update = function (i) {
       var value = '';
-      for (i = 1; i <= roomNumber.value; i++) {
+      for (i = 1; i <= room.value; i++) {
         value = value + '<option value=' + i + '>для ' + i + ' гост' + (i === 1 ? 'я' : 'ей') + '</option>';
       }
-      capacity.innerHTML = value || '<option>не для гостей</option>';
+      price.innerHTML = value || '<option>не для гостей</option>';
     };
     update();
-    roomNumber.addEventListener('change', update, false);
-  })(document.getElementById('capacity'), document.getElementById('room_number'));
+    room.addEventListener('change', update, false);
+  };
+
+  onRoomNumber(capacity, roomNumber);
 
   // -----> Время выезда === время заезда <-----
   var syncOnChange = function (element1, element2) {
@@ -97,7 +72,7 @@ window.formSet = (function () {
     return invalid.titleRules || invalid.priceRules;
   };
 
-  window.synchronizeFields(selectBuildingType, inputOfferPrice, onInputOfferPrice, ['flat', 'home', 'house', 'bungalo'], [1000, 5000, 10000, 0]);
+  window.synchronizeFields(selectBuildingType, inputOfferPrice, onInputOfferPrice, TYPES, TYPE_COSTS);
 
   window.synchronizeFields(selectTimeIn, selectTimeOut, syncOnChange, CHECK_IN, CHECK_OUT);
   window.synchronizeFields(selectTimeOut, selectTimeIn, syncOnChange, CHECK_IN, CHECK_OUT);
