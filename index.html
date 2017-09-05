@@ -138,7 +138,7 @@
               </div>
               <div class="form__element">
                 <label for="price">Цена за ночь, руб.</label>
-                <input id="price" name="price" type="number" placeholder="1000" minlength="0" maxlength="1000000" required>
+                <input id="price" name="price" type="number" placeholder="1000" minlength="0" maxlength="1000000" required min="0">
               </div>
             </div>
             <div class="form__row">
@@ -154,7 +154,10 @@
               <div class="form__element">
                 <label for="capacity">Количество мест</label>
                 <select id="capacity" name="capacity">
-              </select>
+                <option value="1" selected>для 1 гостя</option>    <option value="2">для 2 гостей</option>
+                <option value="3">для 3 гостей</option>
+                <option value="0">не для гостей</option>
+                </select>
               </div>
             </div>
             <div class="form__element  form__element--wide">
@@ -278,6 +281,7 @@
   </template>
 
   <script src="./js/data.js"></script>
+  <script src="./js/synchronize-fields.js"></script>
   <script src="./js/card.js"></script>
   <script src="./js/pin.js"></script>
   <script src="./js/form.js"></script>
