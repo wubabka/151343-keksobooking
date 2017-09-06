@@ -1,10 +1,10 @@
 'use strict';
 
-window.pinSet = (function () {
+window.pinSet = (function (advertsList) {
   var pinsMap = document.querySelector('.tokyo__pin-map');
   var pinActive = document.querySelector('.pin--active');
   var dialogWindow = document.querySelector('.dialog');
-  var advertsList = window.dataSet.createAdv();
+  // var advertsList = window.dataSet.createAdv();
 
   // -----> Создание пина <-----
   var createPin = function (item, state) {
@@ -64,8 +64,7 @@ window.pinSet = (function () {
   };
 
   // -----> Добавление пинов в DOM <-----
-  return function () {
-    // var pinMap = document.querySelector('.tokyo__pin-map');
+  var addPinOnMap = function () {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < advertsList.length; i++) {
       fragment.appendChild(createPin(advertsList[i]));
@@ -76,4 +75,6 @@ window.pinSet = (function () {
     pinsMap.addEventListener('keydown', onShowDialog);
   };
 
-})();
+  addPinOnMap();
+
+});

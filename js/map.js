@@ -1,6 +1,10 @@
 'use strict';
 
-window.pinSet();
+var URL = 'https://1510.dump.academy/keksobooking/data';
+var onLoad = function (loadedData) {
+  window.pinSet(loadedData);
+};
+window.load(URL, onLoad);
 
 var pinMain = document.querySelector('.pin__main');
 var addressField = document.querySelector('#address');
