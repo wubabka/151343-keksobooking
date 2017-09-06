@@ -6,7 +6,7 @@ window.formSet = (function () {
   var CHECK_IN = ['12:00', '13:00', '14:00'];
   var CHECK_OUT = ['12:00', '13:00', '14:00'];
 
-  var submit = document.querySelector('.form__submit');
+  var form = document.querySelector('.notice__form');
   var selectBuildingType = document.querySelector('#type');
   var inputOfferPrice = document.querySelector('#price');
   var selectTimeIn = document.querySelector('#timein');
@@ -46,13 +46,6 @@ window.formSet = (function () {
     element.style.borderColor = !condition ? 'green' : 'red';
   };
 
-  // -----> Запуск проверки заполнения формы <-----
-  var onSubmitClick = function (e) {
-    if (!isFormValidate()) {
-      e.preventDefault();
-    }
-  };
-
   // -----> Обработчик события нажатия кнопки "Опубликовать" <-----
   var isFormValidate = function () {
     var title = document.querySelector('#title');
@@ -72,11 +65,14 @@ window.formSet = (function () {
     return invalid.titleRules || invalid.priceRules;
   };
 
+  form.addEventListener('submit', function (e) {
+    window.backend.save(new FormData(form), isFormValidate, window.onError);
+    e.preventDefault();
+  });
+
   window.synchronizeFields(selectBuildingType, inputOfferPrice, onInputOfferPrice, TYPES, TYPE_COSTS);
 
   window.synchronizeFields(selectTimeIn, selectTimeOut, syncOnChange, CHECK_IN, CHECK_OUT);
   window.synchronizeFields(selectTimeOut, selectTimeIn, syncOnChange, CHECK_IN, CHECK_OUT);
-
-  submit.addEventListener('click', onSubmitClick);
 
 })();
