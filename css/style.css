@@ -667,18 +667,17 @@ select option:hover {
 }
 
 .alert-message {
-  z-index: 100;
+  z-index: 1000;
   position: fixed;
-  left: 40%;
-  top: 20%;
-  width: 300px;
+  left: 0;
+  top: 0;
+  width: 100%;
   margin: 0 auto;
-  padding: 2%;
-  background-color: rebeccapurple;
-  font-size: 30px;
+  padding: 1%;
+  background-color: bisque;
+  font-size: 20px;
   text-align: center;
   color: red;
   border: 2px solid red;
-  box-shadow: 6px 10px 6px black;
-  border-radius: 100px;
+  box-shadow: 1px 1px 10px black;
 }
