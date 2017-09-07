@@ -47,19 +47,21 @@ window.pinSet = (function (advertsList) {
       if (evt.target.className === 'rounded') {
         currentPin = currentTarget.offsetParent;
         currentSrc = currentTarget.getAttribute('src');
-      } else if (currentTarget.className === 'pin') {
+      } else if (currentTarget.className === 'pin' || currentTarget.className === 'pin pin--active') {
         currentPin = currentTarget;
         currentSrc = currentTarget.children[0].getAttribute('src');
       }
       // -----> Если у пина уже есть pin--active, то его надо убрать <-----
-      if (pinActive) {
-        pinActive.classList.remove('pin--active');
+      if (currentPin.className && currentPin.className !== 'pin  pin__main') {
+        if (pinActive !== null) {
+          pinActive.classList.remove('pin--active');
+        }
+        currentPin.classList.add('pin--active');
+        pinActive = currentPin;
+        // -----> Создание окна диалога для выбранного пина <-----
+        var pinNumber = searchAdvert(currentSrc, advertsList);
+        window.cardSet(advertsList[pinNumber]);
       }
-      currentPin.classList.add('pin--active');
-      pinActive = currentPin;
-      // -----> Создание окна диалога для выбранного пина <-----
-      var pinNumber = searchAdvert(currentSrc, advertsList);
-      window.cardSet(advertsList[pinNumber]);
     }
   };
 

@@ -65,14 +65,15 @@ window.formSet = (function () {
     return invalid.titleRules || invalid.priceRules;
   };
 
-  var resetForm = function (el) {
-    el.reset();
-  };
-
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+
+    var resetForm = function () {
+      e.target.reset();
+    };
+
     if (isFormValidate) {
-      window.backend.save(new FormData(form), resetForm(form), window.onError);
+      window.backend.save(new FormData(form), resetForm, window.onError);
     }
   });
 
