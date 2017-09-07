@@ -7,7 +7,6 @@ window.formSet = (function () {
   var CHECK_OUT = ['12:00', '13:00', '14:00'];
 
   var form = document.querySelector('.notice__form');
-  // var submit = document.querySelector('.form__submit');
   var selectBuildingType = document.querySelector('#type');
   var inputOfferPrice = document.querySelector('#price');
   var selectTimeIn = document.querySelector('#timein');
@@ -66,18 +65,16 @@ window.formSet = (function () {
     return invalid.titleRules || invalid.priceRules;
   };
 
+  var resetForm = function (el) {
+    el.reset();
+  };
+
   form.addEventListener('submit', function (e) {
-    window.backend.save(new FormData(form), isFormValidate, window.onError);
     e.preventDefault();
-    form.reset();
+    if (isFormValidate) {
+      window.backend.save(new FormData(form), resetForm(form), window.onError);
+    }
   });
-
-  // if (form.checkValidity()) {
-  //   form.submit();
-  //   window.backend.save(new FormData(form), isFormValidate, window.onError);
-  // }
-
-  // submit.addEventListener('click', isFormValidate);
 
   window.synchronizeFields(selectBuildingType, inputOfferPrice, onInputOfferPrice, TYPES, TYPE_COSTS);
 
