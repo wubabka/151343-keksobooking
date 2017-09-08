@@ -1,10 +1,10 @@
 'use strict';
 
-window.pinSet = (function () {
+window.pinSet = (function (advertsList) {
   var pinsMap = document.querySelector('.tokyo__pin-map');
   var pinActive = document.querySelector('.pin--active');
   var dialogWindow = document.querySelector('.dialog');
-  var advertsList = window.dataSet.createAdv();
+  // var advertsList = window.dataSet.createAdv();
 
   // -----> Создание пина <-----
   var createPin = function (item, state) {
@@ -47,25 +47,26 @@ window.pinSet = (function () {
       if (evt.target.className === 'rounded') {
         currentPin = currentTarget.offsetParent;
         currentSrc = currentTarget.getAttribute('src');
-      } else if (currentTarget.className === 'pin') {
+      } else if (currentTarget.className === 'pin' || currentTarget.className === 'pin pin--active') {
         currentPin = currentTarget;
         currentSrc = currentTarget.children[0].getAttribute('src');
       }
       // -----> Если у пина уже есть pin--active, то его надо убрать <-----
-      if (pinActive) {
-        pinActive.classList.remove('pin--active');
+      if (currentPin.className && currentPin.className !== 'pin  pin__main') {
+        if (pinActive !== null) {
+          pinActive.classList.remove('pin--active');
+        }
+        currentPin.classList.add('pin--active');
+        pinActive = currentPin;
+        // -----> Создание окна диалога для выбранного пина <-----
+        var pinNumber = searchAdvert(currentSrc, advertsList);
+        window.cardSet(advertsList[pinNumber]);
       }
-      currentPin.classList.add('pin--active');
-      pinActive = currentPin;
-      // -----> Создание окна диалога для выбранного пина <-----
-      var pinNumber = searchAdvert(currentSrc, advertsList);
-      window.cardSet(advertsList[pinNumber]);
     }
   };
 
   // -----> Добавление пинов в DOM <-----
-  return function () {
-    // var pinMap = document.querySelector('.tokyo__pin-map');
+  var addPinOnMap = function () {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < advertsList.length; i++) {
       fragment.appendChild(createPin(advertsList[i]));
@@ -76,4 +77,6 @@ window.pinSet = (function () {
     pinsMap.addEventListener('keydown', onShowDialog);
   };
 
-})();
+  addPinOnMap();
+
+});

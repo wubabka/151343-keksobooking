@@ -14,7 +14,7 @@ window.dataSet = (function () {
     'Неуютное бунгало по колено в воде'
   ];
   var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-  var TYPES = ['flat', 'home', 'house', 'bungalo'];
+  var TYPES = ['flat', 'house', 'palace', 'bungalo'];
 
   var CHECK_IN = ['12:00', '13:00', '14:00'];
   var CHECK_OUT = ['12:00', '13:00', '14:00'];

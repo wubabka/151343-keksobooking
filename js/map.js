@@ -1,6 +1,10 @@
 'use strict';
 
-window.pinSet();
+var onLoad = function (loadedData) {
+  window.pinSet(loadedData);
+};
+
+window.backend.load(onLoad, window.onError);
 
 var pinMain = document.querySelector('.pin__main');
 var addressField = document.querySelector('#address');

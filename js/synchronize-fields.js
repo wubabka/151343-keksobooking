@@ -7,4 +7,11 @@
       callback(fieldTwo, currentValue);
     });
   };
+
+  window.onError = function (errorMessage) {
+    var errorBlock = document.createElement('div');
+    errorBlock.className = 'alert-message';
+    errorBlock.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', errorBlock);
+  };
 })();

@@ -665,3 +665,19 @@ select option:hover {
 .rounded {
     border-radius: 50%;
 }
+
+.alert-message {
+  z-index: 1000;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1%;
+  background-color: bisque;
+  font-size: 20px;
+  text-align: center;
+  color: red;
+  border: 2px solid red;
+  box-shadow: 1px 1px 10px black;
+}
