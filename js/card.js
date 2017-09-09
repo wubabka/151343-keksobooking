@@ -14,7 +14,7 @@ window.cardSet = (function () {
 
   // -----> Закрытие окна с объявлением по клику или Enter <-----
   var onCloseDialog = function (evt) {
-    if (window.dataSet.isEnterPressed(evt) || window.dataSet.isClicked(evt)) {
+    if (window.utilSet.isEnterPressed(evt) || window.utilSet.isClicked(evt)) {
       pinActive = document.querySelector('.pin--active');
       if (pinActive) {
         pinActive.classList.remove('pin--active');
@@ -26,7 +26,7 @@ window.cardSet = (function () {
 
   // -----> Закрытие окна с объявлением по Esc <-----
   var onCloseDialogEsc = function (evt) {
-    if (window.dataSet.isEscapePressed(evt)) {
+    if (window.utilSet.isEscapePressed(evt)) {
       pinActive = document.querySelector('.pin--active');
       if (pinActive) {
         pinActive.classList.remove('pin--active');
@@ -35,6 +35,16 @@ window.cardSet = (function () {
       dialogWindow.style.display = 'none';
     }
   };
+
+  var createLodgePhotos = function (lodge, photos) {
+    photos.forEach(function (currentPhoto) {
+      var imgNode = new Image(50, 40);
+      imgNode.setAttribute('src', currentPhoto);
+      imgNode.setAttribute('alt', 'Lodge photo');
+      lodge.appendChild(imgNode);
+    });
+  };
+
 
   // -----> Добавление данных о квартире в DOM <-----
   return function (advertItem) {
@@ -46,6 +56,7 @@ window.cardSet = (function () {
     var lodgeType = lodgeItem.querySelector('.lodge__type');
     var lodgeRooms = lodgeItem.querySelector('.lodge__rooms-and-guests');
     var lodgeCheckin = lodgeItem.querySelector('.lodge__checkin-time');
+    var lodgeGallery = lodgeItem.querySelector('.lodge__photos');
     var dialog = document.querySelector('.dialog');
     var dialogPanel = document.querySelector('.dialog__panel');
 
@@ -63,8 +74,8 @@ window.cardSet = (function () {
     }
 
     lodgeItem.querySelector('.lodge__description').textContent = advertItem.offer.description;
+    createLodgePhotos(lodgeGallery, advertItem.offer.photos);
     document.querySelector('.dialog__title img').src = advertItem.author.avatar;
-
     dialog.replaceChild(lodgeItem, dialogPanel);
     dialogWindow.style.display = 'block';
     document.addEventListener('keydown', onCloseDialogEsc);
