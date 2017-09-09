@@ -33,6 +33,8 @@ window.filter = function () {
 
   var isSuitablePrice = function (it, field, fieldValue) {
     switch (fieldValue) {
+      case 'any':
+        return it.offer[field];
       case 'middle':
         return it.offer[field] > PRICE_MID_MIN && it.offer[field] <= PRICE_MID_MAX;
       case 'low':
