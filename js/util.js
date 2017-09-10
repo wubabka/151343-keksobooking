@@ -1,6 +1,6 @@
 'use strict';
 
-window.dataSet = (function () {
+window.utilSet = (function () {
   var NEIGHBORS = 8;
   var USER_ID = ['01', '02', '03', '04', '05', '06', '07', '08'];
   var TITLES = [
@@ -21,6 +21,9 @@ window.dataSet = (function () {
 
   var ESCAPE_KEY_CODE = 27;
   var ENTER_KEY_CODE = 13;
+
+  var pinActive = null;
+  var dialogWindow = document.querySelector('.dialog');
 
   // -----> Возврат рандомного значения <-----
   var getRandomInt = function (min, max) {
@@ -102,6 +105,21 @@ window.dataSet = (function () {
         adverts.push(createAdvert());
       }
       return adverts;
+    },
+    // -----> Удалить активный пин <-----
+    removeActive: function (itClass) {
+      pinActive = document.querySelector('.' + itClass);
+      if (pinActive !== null) {
+        pinActive.classList.remove(itClass);
+      }
+    },
+    // -----> Спрятать карточку объявления <-----
+    hideCard: function () {
+      dialogWindow.style.display = 'none';
+    },
+    // -----> Показать карточку объявления <-----
+    displayCard: function () {
+      dialogWindow.style.display = 'block';
     }
   };
 

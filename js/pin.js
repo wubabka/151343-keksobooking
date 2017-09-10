@@ -4,7 +4,7 @@ window.pinSet = (function (advertsList) {
   var pinsMap = document.querySelector('.tokyo__pin-map');
   var pinActive = document.querySelector('.pin--active');
   var dialogWindow = document.querySelector('.dialog');
-  // var advertsList = window.dataSet.createAdv();
+  // var advertsList = window.utilSet.createAdv();
 
   // -----> Создание пина <-----
   var createPin = function (item, state) {
@@ -28,6 +28,11 @@ window.pinSet = (function (advertsList) {
     return pin;
   };
 
+  // -----> Удалить пин с карты <-----
+  var deletePin = function (pin) {
+    pinsMap.removeChild(pin);
+  };
+
   // -----> Поиск номера объявления по данным аватара <-----
   var searchAdvert = function (current) {
     for (var i = 0; i < advertsList.length; i++) {
@@ -40,7 +45,7 @@ window.pinSet = (function (advertsList) {
 
   // -----> Показать объявление, если на пин кликнули или нажали Enter <-----
   var onShowDialog = function (evt) {
-    if (window.dataSet.isEnterPressed(evt) || window.dataSet.isClicked(evt)) {
+    if (window.utilSet.isEnterPressed(evt) || window.utilSet.isClicked(evt)) {
       var currentPin = '';
       var currentSrc = '';
       var currentTarget = evt.target;
@@ -66,8 +71,15 @@ window.pinSet = (function (advertsList) {
   };
 
   // -----> Добавление пинов в DOM <-----
-  var addPinOnMap = function () {
+  return function (currentArray) {
+    advertsList = currentArray;
     var fragment = document.createDocumentFragment();
+    var allPins = pinsMap.querySelectorAll('.pin:not(.pin__main)');
+    if (allPins.length !== 0) {
+      allPins.forEach(function (item) {
+        deletePin(item);
+      });
+    }
     for (var i = 0; i < advertsList.length; i++) {
       fragment.appendChild(createPin(advertsList[i]));
     }
@@ -77,6 +89,4 @@ window.pinSet = (function (advertsList) {
     pinsMap.addEventListener('keydown', onShowDialog);
   };
 
-  addPinOnMap();
-
-});
+})();

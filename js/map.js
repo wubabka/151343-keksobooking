@@ -2,6 +2,7 @@
 
 var onLoad = function (loadedData) {
   window.pinSet(loadedData);
+  window.filter(loadedData);
 };
 
 window.backend.load(onLoad, window.onError);
