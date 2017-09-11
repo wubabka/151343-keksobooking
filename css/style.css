@@ -502,6 +502,7 @@ select option:hover {
 
 .dialog {
     position: absolute;
+    display: none;
     top: 70px;
     left: 20px;
 

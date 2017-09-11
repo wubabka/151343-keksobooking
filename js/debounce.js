@@ -7,7 +7,7 @@
   var lastTimeout = null;
 
   window.debounce = function (callback) {
-    if (lastTimeout) {
+    if (lastTimeout !== null) {
       window.clearTimeout(lastTimeout);
     }
     lastTimeout = window.setTimeout(callback, DEBOUNCE_TIME);
