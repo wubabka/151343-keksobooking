@@ -1,6 +1,6 @@
 'use strict';
 
-window.cardSet = (function () {
+window.setCard = (function () {
   var TYPE_NAMES = {
     'flat': 'Квартира',
     'home': 'Дом',
@@ -8,34 +8,18 @@ window.cardSet = (function () {
     'bungalo': 'Бунгало'
   };
 
-  var dialogWindow = document.querySelector('.dialog');
-  var dialogClose = dialogWindow.querySelector('.dialog__close');
-  var pinActive;
+  var dialogClose = document.querySelector('.dialog__close');
 
-  // -----> Закрытие окна с объявлением по клику или Enter <-----
-  var onCloseDialog = function (evt) {
-    if (window.utilSet.isEnterPressed(evt) || window.utilSet.isClicked(evt)) {
-      pinActive = document.querySelector('.pin--active');
-      if (pinActive) {
-        pinActive.classList.remove('pin--active');
-      }
-      dialogWindow.style.display = 'none';
-      document.removeEventListener('keydown', onCloseDialogEsc);
+  var onDialogClose = function (evt) {
+    if (window.utilSet.isEscapePressed(evt) || window.utilSet.isClicked(evt)) {
+      window.utilSet.removeActive('pin--active');
+      window.utilSet.hideCard();
+      document.removeEventListener('keydown', onDialogClose);
+      dialogClose.removeEventListener('click', onDialogClose);
     }
   };
 
-  // -----> Закрытие окна с объявлением по Esc <-----
-  var onCloseDialogEsc = function (evt) {
-    if (window.utilSet.isEscapePressed(evt)) {
-      pinActive = document.querySelector('.pin--active');
-      if (pinActive) {
-        pinActive.classList.remove('pin--active');
-        pinActive = '';
-      }
-      dialogWindow.style.display = 'none';
-    }
-  };
-
+  // -----> Создание фотографий в карточке <-----
   var createLodgePhotos = function (lodge, photos) {
     photos.forEach(function (currentPhoto) {
       var imgNode = new Image(50, 40);
@@ -44,7 +28,6 @@ window.cardSet = (function () {
       lodge.appendChild(imgNode);
     });
   };
-
 
   // -----> Добавление данных о квартире в DOM <-----
   return function (advertItem) {
@@ -59,6 +42,9 @@ window.cardSet = (function () {
     var lodgeGallery = lodgeItem.querySelector('.lodge__photos');
     var dialog = document.querySelector('.dialog');
     var dialogPanel = document.querySelector('.dialog__panel');
+    var lodgeFeatures = lodgeItem.querySelector('.lodge__features');
+    var lodgDesc = lodgeItem.querySelector('.lodge__description');
+    var dialogTitleImg = document.querySelector('.dialog__title img');
 
     lodgeTitle.textContent = advertItem.offer.title;
     lodgeAddress.textContent = advertItem.offer.address;
@@ -70,16 +56,15 @@ window.cardSet = (function () {
     for (var i = 0; i < advertItem.offer.features.length; i++) {
       var span = document.createElement('span');
       span.className = 'feature__image feature__image--' + advertItem.offer.features[i];
-      lodgeItem.querySelector('.lodge__features').appendChild(span);
+      lodgeFeatures.appendChild(span);
     }
 
-    lodgeItem.querySelector('.lodge__description').textContent = advertItem.offer.description;
+    lodgDesc.textContent = advertItem.offer.description;
     createLodgePhotos(lodgeGallery, advertItem.offer.photos);
-    document.querySelector('.dialog__title img').src = advertItem.author.avatar;
+    dialogTitleImg.src = advertItem.author.avatar;
     dialog.replaceChild(lodgeItem, dialogPanel);
-    dialogWindow.style.display = 'block';
-    document.addEventListener('keydown', onCloseDialogEsc);
-    dialogClose.addEventListener('click', onCloseDialog);
-    dialogClose.addEventListener('keydown', onCloseDialog);
+    window.utilSet.displayCard();
+    document.addEventListener('keydown', onDialogClose);
+    dialogClose.addEventListener('click', onDialogClose);
   };
 })();
