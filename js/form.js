@@ -42,37 +42,41 @@ window.formSet = (function () {
   };
 
   // -----> Цвет рамки в зависимости от валидности <-----
-  var borderPaint = function borderPaint(element, condition) {
+  var borderPaint = function (element, condition) {
     element.style.borderColor = !condition ? 'green' : 'red';
   };
 
   // -----> Обработчик события нажатия кнопки "Опубликовать" <-----
-  var isFormValidate = function () {
+  var isFormValid = function () {
     var title = document.querySelector('#title');
     var price = document.querySelector('#price');
+    var address = document.querySelector('#address');
+    var errorBlock = document.querySelector('.alert-message');
+
+    if (errorBlock) {
+      errorBlock.remove();
+    }
 
     var invalid = {
-      titleRules: !title.hasAttribute('required') ||
-        (title.value.length < 30 || title.value.length > 100),
-      priceRules:
-        !price.hasAttribute('required') ||
-        (price.value < 1000 || price.value > 1000000)
+      titleRules: !title.hasAttribute('required'),
+      priceRules: !price.hasAttribute('required'),
+      addressRules: address.value === ''
     };
 
     borderPaint(title, invalid.titleRules);
     borderPaint(price, invalid.priceRules);
+    borderPaint(address, invalid.addressRules);
 
-    return invalid.titleRules || invalid.priceRules;
+    return !(invalid.titleRules || invalid.priceRules || invalid.addressRules);
   };
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-
     var resetForm = function () {
       e.target.reset();
     };
 
-    if (isFormValidate) {
+    if (isFormValid()) {
       window.backend.save(new FormData(form), resetForm, window.onError);
     }
   });

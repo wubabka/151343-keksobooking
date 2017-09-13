@@ -138,7 +138,7 @@
               </div>
               <div class="form__element">
                 <label for="price">Цена за ночь, руб.</label>
-                <input id="price" name="price" type="number" placeholder="1000" minlength="0" maxlength="1000000" required min="0">
+                <input id="price" name="price" type="number" placeholder="1000" required min="0" max="1000000" step="1">
               </div>
             </div>
             <div class="form__row">
@@ -168,7 +168,7 @@
           <div class="form__panel">
             <div class="form__element  form__element--wide">
               <label for="address">Адрес</label>
-              <input id="address" name="address" type="text" readonly>
+              <input id="address" name="address" type="text" readonly placeholder="Координаты в формате X, Y">
             </div>
             <div class="form__row">
               <div class="form__element">

@@ -3,6 +3,8 @@
 (function () {
   var pinMain = document.querySelector('.pin__main');
   var addressField = document.querySelector('#address');
+  addressField.value = 'x: ' + Math.floor(pinMain.clientWidth) + ', y: ' + Math.floor(pinMain.clientHeight);
+
   var currentCoordinate = null;
 
   // -----> Определить стартовые координаты <-----
