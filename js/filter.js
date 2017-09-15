@@ -26,9 +26,8 @@ window.filter = function () {
   var isEqual = function (it, field, fieldValue) {
     if (field === 'guests' || field === 'rooms') {
       return it.offer[field] === parseInt(fieldValue, 10);
-    } else {
-      return it.offer[field] === fieldValue;
     }
+    return it.offer[field] === fieldValue;
   };
 
   var isSuitablePrice = function (it, field, fieldValue) {
@@ -49,9 +48,8 @@ window.filter = function () {
   var isSuitableValue = function (it, field, fieldValue) {
     if (fieldValue === 'any') {
       return true;
-    } else {
-      return isEqual(it, field, fieldValue);
     }
+    return isEqual(it, field, fieldValue);
   };
 
   var resetPins = function () {
